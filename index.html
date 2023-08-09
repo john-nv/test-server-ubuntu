@@ -17,25 +17,38 @@
 <body>
     <h1>Server ubuntu 20.04</h1>
     <h3 id="time">--:--:--</h3>
-    <hr/>
+    <hr />
     <h3 id="countdown"></h3>
 </body>
 <script>
-
     const timeElement = document.getElementById("time");
-    setInterval(() => {
-        const currentTime = new Date();
+    const countdownElement = document.getElementById("countdown");
 
-        const hours = currentTime.getHours();
-        const minutes = currentTime.getMinutes();
-        const seconds = currentTime.getSeconds();
-        const formattedTime = `${hours}:${minutes}:${seconds}`;
+    setInterval(updateCurrentTime, 1000);
+
+    setInterval(updateCountdown, 1000);
+
+    function updateCurrentTime() {
+        const currentTime = new Date();
+        const formattedTime = formatTime(currentTime);
         timeElement.textContent = '⌚ ' + formattedTime;
         console.log(formattedTime);
+    }
 
-    }, 1000);
+    function formatTime(date) {
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+    }
 
-    setInterval(updateCountdown, 1000)
+    function updateCountdown() {
+        const { days, hours, minutes, seconds } = timeUntilNewYear();
+        countdownElement.innerHTML = `
+        <span>🧨 Vietnamese New Year countdown 🧨</span>
+        <p>${days} day${days === 1 ? '' : 's'} - ${hours}:${minutes}:${seconds} </p>`;
+    }
+
     function timeUntilNewYear() {
         const now = new Date();
         const currentYear = now.getFullYear();
@@ -46,18 +59,7 @@
         const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-        return {
-            days, hours, minutes, seconds
-        };
-    }
-
-    function updateCountdown() {
-        const { days, hours, minutes, seconds } = timeUntilNewYear();
-        const countdownElement = document.getElementById("countdown");
-
-        countdownElement.innerHTML = `
-        <span>🧨🧨🧨🧨🧨</span>
-        <p>${days} day - ${hours} hours ${minutes} minutes ${seconds} seconds</p>`;
+        return { days, hours, minutes, seconds };
     }
 
 
